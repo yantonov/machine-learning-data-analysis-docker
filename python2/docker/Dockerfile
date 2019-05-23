@@ -12,13 +12,9 @@ RUN /opt/conda/bin/pip install --upgrade pip && \
     /opt/conda/bin/conda install scrapy -y && \
     /opt/conda/bin/conda install -c mq pybrain
 
-USER root
-
 # bigartm installation
 RUN apt-get --yes update && \
     apt-get --yes install git make build-essential libboost-all-dev wget
-
-USER ${MY_USER}
 
 # bigartm needs cmake at least 3.1
 # base image uses debian 8, so the latest version of cmake is 3.0.2
@@ -43,12 +39,8 @@ RUN cd /opt && \
     cmake .. && \
     make
 
-USER root
-
 RUN cd /opt/bigartm/build && \
     make install
-
-USER ${MY_USER}
 
 ENV ARTM_SHARED_LIBRARY=/usr/local/lib/libartm.so
 
