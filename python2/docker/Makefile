@@ -21,12 +21,12 @@ notebook:
 			-v "$(SRC):$(CONTAINER_SRC)" \
 			--rm \
 			"$(IMAGE)" \
-			/bin/bash -c \
-			"/opt/conda/bin/jupyter notebook \
+			"jupyter notebook \
 			--notebook-dir=$(CONTAINER_SRC) \
 			--ip=0.0.0.0 \
 			--port=$(JUPITER_PORT) \
-			--no-browser"
+			--no-browser \
+			--allow-root"
 
 lab:
 	docker run \
@@ -36,12 +36,12 @@ lab:
 			-v "$(SRC):$(CONTAINER_SRC)" \
 			--rm \
 			"$(IMAGE)" \
-			/bin/bash -c \
-			"/opt/conda/bin/jupyter lab \
+			"jupyter lab \
 			--notebook-dir=$(CONTAINER_SRC) \
 			--ip=0.0.0.0 \
 			--port=$(JUPITER_PORT) \
-			--no-browser"
+			--no-browser \
+			--allow-root"
 
 ssh:
 	docker run --rm -u 0 -t -i -v "$(SRC):/opt/notebooks" "$(IMAGE)" bash
