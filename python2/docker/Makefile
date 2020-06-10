@@ -19,7 +19,7 @@ build:
 notebook:
 	docker run \
 			--hostname localhost \
-			-d \
+			-it \
 			-p $(EXPOSED_JUPITER_PORT):$(JUPITER_PORT) \
 			-v "$(SRC):$(CONTAINER_SRC)" \
 			--name "$(CONTAINER_NAME)" \
@@ -35,7 +35,7 @@ notebook:
 lab:
 	docker run \
 			--hostname localhost \
-			-d \
+			-it \
 			-p $(EXPOSED_JUPITER_PORT):$(JUPITER_PORT) \
 			-v "$(SRC):$(CONTAINER_SRC)" \
 			--name "$(CONTAINER_NAME)" \
@@ -50,6 +50,9 @@ lab:
 
 logs:
 	docker logs "$(CONTAINER_NAME)"
+
+ssh:
+	docker run --rm -it "$(IMAGE)" /bin/bash
 
 stop:
 	docker stop "$(CONTAINER_NAME)"
