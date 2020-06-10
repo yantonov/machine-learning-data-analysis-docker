@@ -4,9 +4,12 @@ help:
 DOCKER_FILE=Dockerfile
 SRC?=$(shell pwd)
 CONTAINER_SRC=/src
+
 JUPITER_PORT=8888
+EXPOSED_JUPITER_PORT?=8888
 
 IMAGE=yantonov/machine-learning-data-analysis-python2
+CONTAINER_NAME?=$(shell echo "$(IMAGE)" | tr '/' '_')
 
 build:
 	docker build \
@@ -16,9 +19,10 @@ build:
 notebook:
 	docker run \
 			--hostname localhost \
-			-i -t \
-			-p 8888:$(JUPITER_PORT) \
+			-d \
+			-p $(EXPOSED_JUPITER_PORT):$(JUPITER_PORT) \
 			-v "$(SRC):$(CONTAINER_SRC)" \
+			--name "$(CONTAINER_NAME)" \
 			--rm \
 			"$(IMAGE)" \
 			"jupyter notebook \
@@ -31,9 +35,10 @@ notebook:
 lab:
 	docker run \
 			--hostname localhost \
-			-i -t \
-			-p 8888:$(JUPITER_PORT) \
+			-d \
+			-p $(EXPOSED_JUPITER_PORT):$(JUPITER_PORT) \
 			-v "$(SRC):$(CONTAINER_SRC)" \
+			--name "$(CONTAINER_NAME)" \
 			--rm \
 			"$(IMAGE)" \
 			"jupyter lab \
@@ -43,11 +48,11 @@ lab:
 			--no-browser \
 			--allow-root"
 
-ssh:
-	docker run --rm -u 0 -t -i -v "$(SRC):/opt/notebooks" "$(IMAGE)" bash
+logs:
+	docker logs "$(CONTAINER_NAME)"
 
 stop:
-	docker stop "$(shell docker ps -a --filter "ancestor=$(IMAGE)" --format '{{.ID}}' | head -n 1 || echo "")"
+	docker stop "$(CONTAINER_NAME)"
 
 pull:
 	docker pull "$(IMAGE)"
